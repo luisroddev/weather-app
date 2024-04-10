@@ -1,0 +1,16 @@
+[
+  {
+    "London": {
+      "latitude": "40,6351",
+      "longitude": "-4,0049"
+    },
+    "Barcelona": {
+      "latitude": "41,3888",
+      "longitude": "2,159"
+    },
+    "Long Beach": {
+      "latitude": "33,767",
+      "longitude": "-118,1892"
+    }
+  }
+]

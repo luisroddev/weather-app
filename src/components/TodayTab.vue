@@ -1,5 +1,14 @@
 <script setup>
+    import HumidityBar from './HumidityBar.vue'
 
+    defineProps({
+        wind: Number,
+        wind_degrees: Number,
+        wind_direction: String,
+        humidity: Number,
+        visibility: Number,
+        air_pressure: Number
+    })
 </script>
 <template>
     <article class="today">
@@ -7,20 +16,27 @@
         <div class="today__container">
             <div class="today__item">
                 <p class="today__title">Wind status</p>
-                <p class="today__measure"><span class="today__measure--accent">7</span>mph</p>
-                <p class="today__wsw">WSW</p>
+                <p class="today__measure"><span class="today__measure--accent">{{  wind }}</span>mph</p>
+                <p class="today__direction">
+                    <span :style="{ transform: 'rotate(' + wind_degrees + 'deg)' }"
+                        class="today__icon material-symbols-outlined">
+                        navigation
+                    </span>
+                    <span>{{ wind_direction }}</span>
+                </p>
             </div>
             <div class="today__item">
                 <p class="today__title">Humidity</p>
-                <p class="today__measure"><span class="today__measure--accent">84</span>%</p>
+                <p class="today__measure"><span class="today__measure--accent">{{ humidity }}</span>%</p>
+                <HumidityBar :humidity="humidity"/>
             </div>
             <div class="today__item">
                 <p class="today__title">Visibility</p>
-                <p class="today__measure"><span class="today__measure--accent">6,4</span>miles</p>
+                <p class="today__measure"><span class="today__measure--accent">{{ visibility }}</span>miles</p>
             </div>
             <div class="today__item">
                 <p class="today__title">Air Pressure</p>
-                <p class="today__measure"><span class="today__measure--accent">998</span>mb</p>
+                <p class="today__measure"><span class="today__measure--accent">{{ air_pressure }}</span>mb</p>
             </div>
         </div>
     </article>
@@ -39,22 +55,42 @@
         }
 
         &__item{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             background: map-get($map: $colors, $key: c-background-secondary);
+            width: 100%;
             padding: 2rem;
             text-align: center;
         }
 
         &__measure{
             font-size: map-get($map: $font-sizes, $key: fs-large);
+            padding: 1rem 0 1rem 0;
 
             &--accent{
                 font-size: map-get($map: $font-sizes, $key: fs-extra-large);
                 font-weight: bold;
             }
         }
+
+        &__direction{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        &__icon{
+            background: map-get($map: $colors, $key: c-text-terciary);
+            border-radius: 50%;
+            padding: 0.5rem;
+            margin: 0 1rem 0 0;
+        }
+
     }
 
-    @include responsive(90rem){
+
+    @include responsive(55rem){
         .today{
             &__container{
                 grid-template-columns: 1fr;

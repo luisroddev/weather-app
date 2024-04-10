@@ -2,9 +2,10 @@ $colors: (
     "c-black": #000,
     "c-white": #fff,
     "c-grey": #6e707a,
+    "c-yellow": #ffec65,
     "c-background-primary": #100e1d,
     "c-background-secondary": #1e213a,
-    "c-background-terciary": #363157,
+    "c-background-terciary": #585676,
     "c-background-accent": #3c47e9,
     "c-text-primary": #e7e7eb,
     "c-text-secondary": #a09fb1,
@@ -18,4 +19,11 @@ $font-sizes: (
     "fs-large": 1.9rem,
     "fs-extra-large": 4rem,
     "fs-extra-xl-large": 7rem
+);
+
+$icon-sizes: (
+    "i-small": 0.8rem,
+    "i-medium": 1rem,
+    "i-large": 5rem,
+    "i-extra-large": 10rem
 );

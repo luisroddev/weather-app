@@ -1,12 +1,19 @@
 <script setup>
+    import { useWeatherStore } from '@/stores/weatherStore';
+    const weatherStore = useWeatherStore()
+
     const emit = defineEmits(['changeNavState'])
 
     function changeNavState(){
         emit('changeNavState', true);
     }
+
+    function searchWeather(place){
+        weatherStore.fetchDataWeatherFromPlace(place)
+    }
 </script>
 <template>
-    <nav class="nav"  v-show="isNavOpen">
+    <nav class="nav">
         <button @click="changeNavState" class="nav__close">
             <svg class="nav__svg" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 -960 960 960">
                 <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/>
@@ -17,7 +24,7 @@
             <input @click="search" type="button" class="nav__input-button" value="Search">
         </nav>
         <div class="nav__list">
-            <button class="nav__place">
+            <button class="nav__place" @click="searchWeather('London')">
                 <span class="nav__span">London</span>
                 <span class="nav__span">
                     <svg class="nav__svg" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
@@ -25,7 +32,7 @@
                     </svg>
                 </span>
             </button>
-            <button class="nav__place">
+            <button class="nav__place" @click="searchWeather('Barcelona')">
                 <span class="nav__span">Barcelona</span>
                 <span class="nav__span">
                     <svg class="nav__svg" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
@@ -33,7 +40,7 @@
                     </svg>
                 </span>
             </button>
-            <button class="nav__place">
+            <button class="nav__place" @click="searchWeather('Long Beach')">
                 <span class="nav__span">Long Beach</span>
                 <span class="nav__span">
                     <svg class="nav__svg" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">

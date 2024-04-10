@@ -1,0 +1,116 @@
+[
+  {
+    "0": {
+      "name": "Clear",
+      "icon": "sunny"
+    },
+    "1": {
+      "name": "Mainly clear",
+      "icon": "partly_cloudy_day"
+    },
+    "2": {
+      "name": "Partly cloudy",
+      "icon": "partly_cloudy_day"
+    },
+    "3": {
+      "name": "Overcast",
+      "icon": "cloud"
+    },
+    "45": {
+      "name": "Fog",
+      "icon": "foggy"
+    },
+    "48": {
+      "name": "Depositing rime fog",
+      "icon": "foggy"
+    },
+    "51": {
+      "name": "Drizzle",
+      "icon": "rainy"
+    },
+    "53": {
+      "name": "Moderate intensity",
+      "icon": "rainy"
+    },
+    "55": {
+      "name": "Dense intensity",
+      "icon": "rainy"
+    },
+    "56": {
+      "name": "Freezing Drizzle",
+      "icon": "rainy"
+    },
+    "57": {
+      "name": "Dense intensity",
+      "icon": "rainy"
+    },
+    "61": {
+      "name": "Rain",
+      "icon": "rainy"
+    },
+    "63": {
+      "name": "Moderate intensity",
+      "icon": "rainy"
+    },
+    "65": {
+      "name": "Heavy intensity",
+      "icon": "rainy"
+    },
+    "66": {
+      "name": "Freezing Rain",
+      "icon": "rainy"
+    },
+    "67": {
+      "name": "Heavy intensity",
+      "icon": "rainy"
+    },
+    "71": {
+      "name": "Snow fall",
+      "icon": "cloudly_snowing"
+    },
+    "73": {
+      "name": "Moderate intensity",
+      "icon": "cloudly_snowing"
+    },
+    "75": {
+      "name": "Heavy intensity",
+      "icon": "cloudly_snowing"
+    },
+    "77": {
+      "name": "Snow grains",
+      "icon": "cloudly_snowing"
+    },
+    "80": {
+      "name": "Rain showers",
+      "icon": "rainy"
+    },
+    "81": {
+      "name": "Moderate intensity",
+      "icon": "rainy"
+    },
+    "82": {
+      "name": "Violent",
+      "icon": "rainy"
+    },
+    "85": {
+      "name": "Snow showers",
+      "icon": "cloudly_snowing"
+    },
+    "86": {
+      "name": "Heavy",
+      "icon": "cloudly_snowing"
+    },
+    "95": {
+      "name": "Thunderstorm",
+      "icon": "thunderstorm"
+    },
+    "96": {
+      "name": "Thunderstorm with hail",
+      "icon": "thunderstorm"
+    },
+    "99": {
+      "name": "Heavy hail",
+      "icon": "thunderstorm"
+    }
+  }
+]

@@ -11,12 +11,12 @@
 <style lang="scss" scoped>
     .container{
         width: 100%;
-        padding: 5rem;
+        padding: 3rem 7rem 3rem 7rem;
     }
 
     @include responsive(90rem){
         .container{
-            padding: 4rem;
+            padding: 2rem;
         }
     }
 </style>
