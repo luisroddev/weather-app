@@ -2,6 +2,7 @@
     import { ref } from 'vue'
     import { useWeatherStore } from '@/stores/weatherStore';
     import Nav from './Nav.vue';
+    import TodayBar from './TodayBar.vue';
     
     const weatherStore = useWeatherStore()
 
@@ -35,6 +36,14 @@
                 </svg>
             </button>
         </section>
+        <TodayBar v-if="typeof weatherStore.todayWeatherData.weather_code !== 'undefined'"
+            :icon="weatherStore.weatherCodesList[weatherStore.todayWeatherData.weather_code].icon"
+            :deg="weatherStore.todayWeatherData.deg"
+            :name="weatherStore.todayWeatherData.name"
+            :time="weatherStore.weatherCodesList[weatherStore.todayWeatherData.weather_code].name"
+            :location="weatherStore.todayWeatherData.time"
+        />
+        <!-- 
         <section v-if="weatherStore.todayWeatherData" class="aside__weather weather">
             <span v-if="weatherStore.todayWeatherData.weather_code && weatherStore.weatherCodesList" class="weather__icon material-symbols-outlined">
                 {{ weatherStore.weatherCodesList[weatherStore.todayWeatherData.weather_code].icon }}
@@ -56,6 +65,8 @@
                 <span>Helsinki</span>
             </p>
         </section>
+
+        -->
     </aside>
 </template>
 <style lang="scss" scoped>
@@ -63,7 +74,8 @@
         width: 100%;
         padding: 3rem;
         background-color: map-get($map: $colors, $key: c-background-secondary);
-
+        background-image: linear-gradient(to bottom, map-get($map: $colors, $key: c-background-secondary), map-get($map: $colors, $key: c-background-primary));
+        
         &__options{
             display: flex;
             justify-content: space-between;
