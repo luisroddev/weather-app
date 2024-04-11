@@ -16,8 +16,12 @@
         <p class="progress__percentage">%</p>
     </div>
 </template>
-<style lang="scss" scoped>
+<style lang="scss" >
+    * {
+        border: 1px solid red;
+    }
     .progress{
+        background-color: red;
         width:100%;
         display: flex;
         flex-direction: column;

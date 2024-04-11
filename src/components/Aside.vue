@@ -1,13 +1,15 @@
 <script setup>
     import { ref } from 'vue'
-    import { useWeatherStore } from '@/stores/weatherStore';
     import Nav from './Nav.vue';
     import TodayBar from './TodayBar.vue';
     
+    import { useWeatherStore } from '@/stores/weatherStore';
     const weatherStore = useWeatherStore()
 
-    const isNavOpen = ref(false)
+    import { usePlaceStore } from '@/stores/placeStore';
+    const placeStore = usePlaceStore()
 
+    const isNavOpen = ref(false)
     function changeNavState(){
         isNavOpen.value = !isNavOpen.value
     }
@@ -16,18 +18,19 @@
         if(navigator.geolocation){
             console.log("Ubicación activada")
             navigator.geolocation.getCurrentPosition((position) => {
-                console.log(position)
+                alert(`Latitude: ${position.coords.latitude} / Longitude: ${position.coords.longitude}`)
             });
         }else{
             alert("No está conectada la Ubicación")
         }
     }
 
-
 </script>
 <template>
     <aside class="aside">
-        <Nav @changeNavState="changeNavState" v-show="isNavOpen"/>
+        <Transition name="nav">
+            <Nav @changeNavState="changeNavState" v-show="isNavOpen"/>
+        </Transition>
         <section class="aside__options">
             <button @click="changeNavState" class="aside__button">Search for places</button>
             <button @click="registerUserPosition" class="aside__button aside__button--round">
@@ -36,46 +39,24 @@
                 </svg>
             </button>
         </section>
-        <TodayBar v-if="typeof weatherStore.todayWeatherData.weather_code !== 'undefined'"
+        <TodayBar v-if="(typeof weatherStore.todayWeatherData.weather_code !== 'undefined')"
             :icon="weatherStore.weatherCodesList[weatherStore.todayWeatherData.weather_code].icon"
             :deg="weatherStore.todayWeatherData.deg"
-            :name="weatherStore.todayWeatherData.name"
-            :time="weatherStore.weatherCodesList[weatherStore.todayWeatherData.weather_code].name"
-            :location="weatherStore.todayWeatherData.time"
+            :name="weatherStore.weatherCodesList[weatherStore.todayWeatherData.weather_code].name"
+            :time="weatherStore.todayWeatherData.time"
+            :location="placeStore.place.name"
         />
-        <!-- 
-        <section v-if="weatherStore.todayWeatherData" class="aside__weather weather">
-            <span v-if="weatherStore.todayWeatherData.weather_code && weatherStore.weatherCodesList" class="weather__icon material-symbols-outlined">
-                {{ weatherStore.weatherCodesList[weatherStore.todayWeatherData.weather_code].icon }}
-            </span>
-            <p v-if="weatherStore.todayWeatherData.weather_code && weatherStore.weatherCodesList" class="weather__type">
-                {{ weatherStore.weatherCodesList[weatherStore.todayWeatherData.weather_code].name }}
-            </p>
-            <p class="weather__measure"><span class="weather__measure--numeric"> 
-                {{ weatherStore.todayWeatherData.deg }}</span>
-                ºC
-            </p>
-            <p class="weather__place">
-                {{ weatherStore.todayWeatherData.time }}
-            </p>
-            <p class="weather__location">
-                <svg  class="weather__svg weather__svg--location" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
-                    <path d="M480-480q33 0 56.5-23.5T560-560q0-33-23.5-56.5T480-640q-33 0-56.5 23.5T400-560q0 33 23.5 56.5T480-480Zm0 294q122-112 181-203.5T720-552q0-109-69.5-178.5T480-800q-101 0-170.5 69.5T240-552q0 71 59 162.5T480-186Zm0 106Q319-217 239.5-334.5T160-552q0-150 96.5-239T480-880q127 0 223.5 89T800-552q0 100-79.5 217.5T480-80Zm0-480Z"/>
-                </svg>
-                <span>Helsinki</span>
-            </p>
-        </section>
-
-        -->
     </aside>
 </template>
 <style lang="scss" scoped>
     .aside{
         width: 100%;
         padding: 3rem;
-        background-color: map-get($map: $colors, $key: c-background-secondary);
+        background-color: map-get($map: $colors, $key: c-background-primary);
         background-image: linear-gradient(to bottom, map-get($map: $colors, $key: c-background-secondary), map-get($map: $colors, $key: c-background-primary));
-        
+        background-size: 100% 80rem;
+        background-repeat: no-repeat;
+
         &__options{
             display: flex;
             justify-content: space-between;
@@ -115,67 +96,20 @@
         }
 
     }
+    .nav-enter-active,
+    .nav-leave-active {
+        transition: opacity 0.5s ease;
+    }
 
-    .weather{
-        display: flex;
-        flex-direction: column;
-        text-align: center;
-        color: map-get($map: $colors, $key: c-text-secondary);
-        
-        &__measure{
-            font-size: map-get($map: $font-sizes, $key: fs-large);
+    .nav-enter-from,
+    .nav-leave-to {
+        opacity: 0;
+    }
 
-            &--numeric{
-                color: map-get($map: $colors, $key: c-text-primary);
-                font-size: map-get($map: $font-sizes, $key: fs-extra-xl-large);
-            
-                &::first-letter{
-                    color:red;
-                }
-            }
-        }
-        
-        &__svg{
-            fill: map-get($map: $colors, $key: c-text-primary); 
-        }
-
-        &__type{
-            color: map-get($map: $colors, $key: c-text-secondary);
-            font-size: map-get($map: $font-sizes, $key: fs-large);
-            margin: 3rem 0 3rem 0;
-        }
-
-        &__place{
-            margin: 0 0 1rem 0;
-        }
-
-        &__icon{
-            color: map-get($map: $colors, $key: c-text-primary);
-            font-size: map-get($map: $icon-sizes, $key: i-extra-large);
-            height: auto;
-            margin: 5rem 0 5rem 0;
-        }
-
-        &__svg{
-            &--measure{
-                fill: map-get($map: $colors, $key: c-text-primary);
-                width: 10rem;
-                height: auto;
-                margin: 3rem 0 5rem 0;
-            }
-
-            &--location{
-                fill: map-get($map: $colors, $key: c-text-secondary);
-            }
-
-        }
-
-        &__location{
-            width: 10rem;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-weight: bold;
+    @include responsive(75rem){
+        .aside{
+            background-size: 100%;
         }
     }
+
 </style>

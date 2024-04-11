@@ -22,6 +22,6 @@
     .main{
         display: grid;
         grid-template-columns: 1fr;
-        gap: 4rem;
+        gap: 2rem;
     }
 </style>

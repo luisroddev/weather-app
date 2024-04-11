@@ -1,7 +1,6 @@
 import { defineStore } from "pinia";
 import { ref } from 'vue';
 import weatherCodesJSON from './../assets/data/weather-codes.json'
-import placesJSON from './../assets/data/places.json'
 
 export const useWeatherStore = defineStore('weatherStore', () => {
     const baseURL = "https://api.open-meteo.com/v1/forecast?"
@@ -10,10 +9,7 @@ export const useWeatherStore = defineStore('weatherStore', () => {
     const weather = ref({})
     const todayWeatherData = ref([])
     const nextDaysWeatherData = ref([])
-    const weatherCodesList = ref([])
-    const placesList = ref([])
-
-    transformWeatherCodesToList();
+    const weatherCodesList = transformWeatherCodesToList();
 
     /**
      * Realiza una petición fetch a la API Open-Meteo y guarda el resultado
@@ -21,11 +17,10 @@ export const useWeatherStore = defineStore('weatherStore', () => {
      */
     const fetchDataWeather = async () => {
         try {
-            const response = await fetch('https://api.open-meteo.com/v1/forecast?latitude=52.52&longitude=13.41&current=temperature_2m,surface_pressure,wind_speed_10m,relative_humidity_2m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min&daily=wind_direction_10m_dominant&hourly=visibility&wind_speed_unit=mph&timezone=auto')
+            const response = await fetch('https://api.open-meteo.com/v1/forecast?latitude=40.6351&longitude=-4.0049&current=temperature_2m,surface_pressure,wind_speed_10m,relative_humidity_2m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min&daily=wind_direction_10m_dominant&hourly=visibility&wind_speed_unit=mph&timezone=auto')
             if (!response.ok) {
                 throw new Error("Network response was not ok");
             }
-            
             const data = await response.json();
             weather.value = data;
 
@@ -37,27 +32,22 @@ export const useWeatherStore = defineStore('weatherStore', () => {
         }
     }
 
-    function fetchDataWeatherFromPlace(place) {
+    /**
+     * Realiza una petición fetch a la API Open-Meteo para recibir el tiempo
+     * en una latitud y longitud determinada y guarda el resultado
+     * en la constante reactiva weather
+     */
+    const fetchDataWeatherFromLocation = async (location) => {
         try {
-            placesList.value = placesJSON[0]
-            console.log(placesList.value[0])
-            let obj = {
-                latitude: placesList.value[place].latitude,
-                longitude: placesList.value[place].longitude
+            const response = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${location.latitude}&longitude=${location.longitude}&current=temperature_2m,surface_pressure,wind_speed_10m,relative_humidity_2m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min&daily=wind_direction_10m_dominant&hourly=visibility&wind_speed_unit=mph&timezone=auto`)
+            if (!response.ok) {
+                throw new Error("Network response was not ok");
             }
-            
-            const response = String(`${baseURL}latitude=${obj.latitude}&longitude=${obj.longitude}${params}`)
-            console.log(response)
+            const data = await response.json();
+            weather.value = data;
 
-        } catch (error) {
-            console.error("Fetch error:", error);
-        }
-    }
-
-    const fetchDataWeatherFromLatLong = async (latitude, longitude) => {
-        try {
-            const response = String(`${baseURL}latitude=${latitude}&longitude=${longitude}${params}`)
-            //console.log(response)
+            await transformNextDaysData()
+            await transformTodayData()
 
         } catch (error) {
             console.error("Fetch error:", error);
@@ -81,10 +71,10 @@ export const useWeatherStore = defineStore('weatherStore', () => {
             wind_speed: weather.value.current.wind_speed_10m,
             wind_degrees: weather.value.daily.wind_direction_10m_dominant[0],
             humidity: weather.value.current.relative_humidity_2m,
-            visibility: transformMetersToMiles(weather.value.hourly.visibility[hourNow] * 0.000621),
+            visibility: transformMetersToMiles(weather.value.hourly.visibility[hourNow]),
             air_pressure: weather.value.current.surface_pressure
         }
-        todayWeatherData.value = obj
+        todayWeatherData.value = obj;
     }
 
     /**
@@ -93,9 +83,9 @@ export const useWeatherStore = defineStore('weatherStore', () => {
      * y los guarda en la constante reactiva nextDaysWeatherData
      */
     const transformNextDaysData = async () => {
-        let obj = {}
+        nextDaysWeatherData.value.length = 0
         weather.value.daily.time.forEach((time, index) => {
-            obj = {
+            let obj = {
                 date: formatDate(time),
                 weather_code: weather.value.daily.weather_code[index],
                 deg_max: weather.value.daily.temperature_2m_max[index],
@@ -112,7 +102,7 @@ export const useWeatherStore = defineStore('weatherStore', () => {
      * una lista de objetos de Javascript
      */
     function transformWeatherCodesToList (){
-        weatherCodesList.value = weatherCodesJSON[0];
+        return weatherCodesJSON[0];
     }
 
     /**
@@ -131,7 +121,7 @@ export const useWeatherStore = defineStore('weatherStore', () => {
      * @returns {Number} millas a calcular
      */
     function transformMetersToMiles(meters){
-        return Number((meters * 0.000621).toFixed(3))
+        return Number((meters * 0.000621).toFixed(2))
     }
 
     /**
@@ -160,5 +150,5 @@ export const useWeatherStore = defineStore('weatherStore', () => {
     https://api.open-meteo.com/v1/forecast?latitude=52.52&longitude=13.41&current=temperature_2m,surface_pressure,wind_speed_10m,relative_humidity_2m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min&daily=wind_direction_10m_dominant&hourly=visibility&wind_speed_unit=mph&timezone=auto
     */
 
-    return { weather, weatherCodesList, todayWeatherData, nextDaysWeatherData, fetchDataWeather, fetchDataWeatherFromPlace,  transformAngleWindToCharacters, formatDate }
+    return { weather, weatherCodesList, todayWeatherData, nextDaysWeatherData, fetchDataWeather, fetchDataWeatherFromLocation,  transformAngleWindToCharacters, formatDate }
 })

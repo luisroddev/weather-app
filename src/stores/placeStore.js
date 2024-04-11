@@ -19,7 +19,7 @@ export const usePlaceStore = defineStore('placeStore', () => {
             const response = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${placeSearched}&count=1&language=en&format=json`)
             if (!response.ok) {
                 throw new Error("Network response was not ok");
-            }
+            }   
             const data = await response.json();
             return data;
 

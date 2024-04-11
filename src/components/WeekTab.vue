@@ -1,15 +1,12 @@
 <script setup>
-    //import { ref } from 'vue'
     import { useWeatherStore } from './../stores/weatherStore.js'
     import DayItem from './DayItem.vue';
 
     const weatherStore = useWeatherStore()
-
-    weatherStore.fetchDataWeatherFromPlace(10, 5)
     
 </script>
 <template>
-    <section v-if="weatherStore.nextDaysWeatherData" class="week">
+    <section v-if="(typeof weatherStore.todayWeatherData.weather_code !== 'undefined')" class="week">
         <DayItem v-for="(day, index) in weatherStore.nextDaysWeatherData" 
             :date="day.date" 
             :icon="weatherStore.weatherCodesList[day.weather_code].icon"

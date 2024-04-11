@@ -1,15 +1,39 @@
 <script setup>
+    import { ref } from 'vue'
     import { useWeatherStore } from '@/stores/weatherStore';
+    import { usePlaceStore } from '@/stores/placeStore';
     const weatherStore = useWeatherStore()
+    const placeStore = usePlaceStore()
 
     const emit = defineEmits(['changeNavState'])
-
     function changeNavState(){
         emit('changeNavState', true);
     }
 
-    function searchWeather(place){
-        weatherStore.fetchDataWeatherFromPlace(place)
+    const placeWritten = ref()
+
+    const searchWeather = async() => {
+        try{
+            let locationFound = await placeStore.fetchPlace(placeWritten.value)
+            if(locationFound.results && locationFound.results.length > 0){
+                let placeData = {
+                    name: locationFound.results[0].name,
+                    latitude: locationFound.results[0].latitude,
+                    longitude: locationFound.results[0].longitude
+                }
+                placeStore.updateSelectedPlace(placeData)
+                weatherStore.fetchDataWeatherFromLocation(placeData)
+            }else{
+                alert("Place not found!")
+            }
+        }catch(error){
+            console.error(error)
+        }
+    }
+
+    function selectWeather(place){
+        let location = placeStore.searchPlace(place)
+        weatherStore.fetchDataWeatherFromLocation(location)
     }
 </script>
 <template>
@@ -20,11 +44,11 @@
             </svg>
         </button>
         <nav class="nav__bar">
-            <input type="text" class="nav__input-text" placeholder="search location">
-            <input @click="search" type="button" class="nav__input-button" value="Search">
+            <input v-model="placeWritten" type="text" class="nav__input-text" placeholder="Search location">
+            <input @click="searchWeather()" type="button" class="nav__input-button" value="Search">
         </nav>
         <div class="nav__list">
-            <button class="nav__place" @click="searchWeather('London')">
+            <button class="nav__place" @click="selectWeather('London')">
                 <span class="nav__span">London</span>
                 <span class="nav__span">
                     <svg class="nav__svg" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
@@ -32,7 +56,7 @@
                     </svg>
                 </span>
             </button>
-            <button class="nav__place" @click="searchWeather('Barcelona')">
+            <button class="nav__place" @click="selectWeather('Barcelona')">
                 <span class="nav__span">Barcelona</span>
                 <span class="nav__span">
                     <svg class="nav__svg" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
@@ -40,7 +64,7 @@
                     </svg>
                 </span>
             </button>
-            <button class="nav__place" @click="searchWeather('Long Beach')">
+            <button class="nav__place" @click="selectWeather('Long Beach')">
                 <span class="nav__span">Long Beach</span>
                 <span class="nav__span">
                     <svg class="nav__svg" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
@@ -61,15 +85,18 @@
         background-color: map-get($map: $colors, $key: c-background-secondary);
         height: 100vh;
         padding: 4rem 2rem;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
 
         &__close{
             background-color: map-get($map: $colors, $key: c-background-secondary);
-            border: none;
             padding: 1rem;
+            border: 0;
             border-radius: 0.5rem;
             cursor: pointer;
             transition: 0.5s;
-            margin: 1rem 0;
+            margin: 0 0 1rem 0;
 
             &:hover{
                 rotate: 90deg;
@@ -83,13 +110,28 @@
         }
 
         &__input-text{
-            border: .125rem solid map-get($map: $colors, $key: c-text-primary);
+            width: 100%;
+            border: 0.19rem solid map-get($map: $colors, $key: c-text-primary);
             color: map-get($map: $colors, $key: c-text-primary);
             background-color: map-get($map: $colors, $key: c-transparent);
             font-size: map-get($map: $font-sizes, $key: fs-medium);
             padding: 0 1rem;
-            &:active{
+            border-radius: 1rem 0 0 1rem;
+            font-weight: bold;
+            transition: 0.5s;
+
+            &::placeholder{
+                color: map-get($map: $colors, $key: c-text-primary);
+            }
+
+            &:focus{
                 outline: none;
+                background-color: map-get($map: $colors, $key: c-text-primary);
+                color: map-get($map: $colors, $key: c-text-terciary);
+
+                &::placeholder{
+                    color: map-get($map: $colors, $key: c-text-terciary);
+                }
             }
         }
     
@@ -97,7 +139,8 @@
             background-color: map-get($map: $colors, $key: c-background-accent);
             color: map-get($map: $colors, $key: c-text-primary);
             font-size: map-get($map: $font-sizes, $key: fs-medium);
-            padding:1rem 0.8rem;
+            padding:1rem 2rem;
+            border-radius:  0 1rem 1rem 0;
             border: none;
             outline: none;
             font-weight: bold;
@@ -105,15 +148,15 @@
             transition: 0.5s;
 
             &:hover{
-                background-color: map-get($map: $colors, $key: c-white);
-                color: map-get($map: $colors, $key: c-background-accent);
+                background-color: map-get($map: $colors, $key: c-black);
             }
         }
 
         &__list{
+            width: 100%;
             display: flex;
             flex-direction: column;
-
+            margin: 3rem 0;
         }
 
         &__place{
@@ -121,7 +164,8 @@
             justify-content: space-between;
             align-items: center;
             background-color: map-get($map: $colors, $key: c-background-secondary);
-            border: .125rem solid map-get($map: $colors, $key: c-transparent);
+            border: 0.19rem solid map-get($map: $colors, $key: c-transparent);
+            border-radius: 1rem;
             color: map-get($map: $colors, $key: c-text-primary);
             outline: none;
             padding: 1.5rem 1rem 1.5rem 1rem;
@@ -132,7 +176,7 @@
             transition: all 0.5s ease;
 
             &:hover{
-                border: .125rem solid map-get($map: $colors, $key: c-text-terciary);
+                border: 0.19rem solid map-get($map: $colors, $key: c-text-terciary);
             }
         }
 

@@ -10,7 +10,7 @@
 <template>
     <section class="weather">
         <span class="weather__icon material-symbols-outlined">{{ icon }}</span>
-        <p class="weather__measure"><span class="weather__measure--numeric">{{ deg }}</span>ºC</p>
+        <p class="weather__measure"><span class="weather__measure--numeric">{{ deg }}</span><span>ºC</span></p>
         <p class="weather__type">{{ name }}</p>
         <p class="weather__place">{{ time }}</p>
         <p class="weather__location">
@@ -44,7 +44,7 @@
         &__type{
             color: map-get($map: $colors, $key: c-text-secondary);
             font-size: map-get($map: $font-sizes, $key: fs-large);
-            margin: 5rem 0 5rem 0;
+            margin: 3rem 0 3rem 0;
         }
 
         &__place{
@@ -55,7 +55,7 @@
             color: map-get($map: $colors, $key: c-text-primary);
             font-size: map-get($map: $icon-sizes, $key: i-extra-large);
             height: auto;
-            margin: 10rem 0 5rem 0;
+            margin: 7rem 0 3rem 0;
         }
 
         &__svg{
