@@ -12,7 +12,7 @@
 </script>
 <template>
     <article class="today">
-        <h2 class="today__h2">Today's Hightlights</h2>
+        <h1 class="today__h1">Today's Hightlights</h1>
         <div class="today__container">
             <div class="today__item">
                 <p class="today__title">Wind status</p>
@@ -44,7 +44,7 @@
 <style lang="scss" scoped>
     .today{
         
-        &__h2{
+        &__h1{
             margin: 0 0 2rem 0;
         }
 

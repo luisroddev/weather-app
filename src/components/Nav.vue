@@ -6,7 +6,7 @@
     const placeStore = usePlaceStore()
 
     const emit = defineEmits(['changeNavState'])
-    function changeNavState(){
+    function emitChangeNavState(){
         emit('changeNavState', true);
     }
 
@@ -34,11 +34,14 @@
     function selectWeather(place){
         let location = placeStore.searchPlace(place)
         weatherStore.fetchDataWeatherFromLocation(location)
+
+        emitChangeNavState()
     }
+
 </script>
 <template>
     <nav class="nav">
-        <button @click="changeNavState" class="nav__close">
+        <button @click="emitChangeNavState" class="nav__close" aria-label="Close nav">
             <svg class="nav__svg" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 -960 960 960">
                 <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/>
             </svg>
@@ -48,24 +51,9 @@
             <input @click="searchWeather()" type="button" class="nav__input-button" value="Search">
         </nav>
         <div class="nav__list">
-            <button class="nav__place" @click="selectWeather('London')">
-                <span class="nav__span">London</span>
-                <span class="nav__span">
-                    <svg class="nav__svg" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
-                        <path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z"/>
-                    </svg>
-                </span>
-            </button>
-            <button class="nav__place" @click="selectWeather('Barcelona')">
-                <span class="nav__span">Barcelona</span>
-                <span class="nav__span">
-                    <svg class="nav__svg" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
-                        <path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z"/>
-                    </svg>
-                </span>
-            </button>
-            <button class="nav__place" @click="selectWeather('Long Beach')">
-                <span class="nav__span">Long Beach</span>
+            <button v-for="place in placeStore.placesFormatList" @click="selectWeather(place.name)" :key="place.name"
+                class="nav__place" aria-label="Select London Weather">
+                <span class="nav__span">{{ place.name }}</span>
                 <span class="nav__span">
                     <svg class="nav__svg" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
                         <path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z"/>

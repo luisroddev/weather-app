@@ -3,9 +3,6 @@ import { ref } from 'vue';
 import weatherCodesJSON from './../assets/data/weather-codes.json'
 
 export const useWeatherStore = defineStore('weatherStore', () => {
-    const baseURL = "https://api.open-meteo.com/v1/forecast?"
-    const params = "&current=temperature_2m,surface_pressure,wind_speed_10m,relative_humidity_2m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min&daily=wind_direction_10m_dominant&hourly=visibility&wind_speed_unit=mph&timezone=auto"
-    
     const weather = ref({})
     const todayWeatherData = ref([])
     const nextDaysWeatherData = ref([])
@@ -36,6 +33,7 @@ export const useWeatherStore = defineStore('weatherStore', () => {
      * Realiza una petición fetch a la API Open-Meteo para recibir el tiempo
      * en una latitud y longitud determinada y guarda el resultado
      * en la constante reactiva weather
+     * @param {Object} location objeto con la latitud y la longitud
      */
     const fetchDataWeatherFromLocation = async (location) => {
         try {
@@ -45,7 +43,6 @@ export const useWeatherStore = defineStore('weatherStore', () => {
             }
             const data = await response.json();
             weather.value = data;
-
             await transformNextDaysData()
             await transformTodayData()
 
@@ -135,20 +132,6 @@ export const useWeatherStore = defineStore('weatherStore', () => {
 
         return date.toLocaleDateString('en-US', options);
     }
-
-    /*  
-    "https://api.open-meteo.com/v1/forecast?latitude=52.52&longitude=13.41&current=temperature_2m,surface_pressure,wind_speed_10m,relative_humidity_2m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min&daily=wind_direction_10m_dominant&hourly=visibility&wind_speed_unit=mph&timezone=auto"
-     
-     
-    base
-    https://api.open-meteo.com/v1/forecast?latitude=40.52&longitude=-3.81&current=temperature_2m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min&wind_speed_unit=mph&timezone=auto
-
-    
-    https://api.open-meteo.com/v1/forecast?latitude=52.52&longitude=13.41&current=temperature_2m,surface_pressure,wind_speed_10m,relative_humidity_2m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min&daily=wind_direction_10m_dominant&hourly=visibility&wind_speed_unit=mph&timezone=auto
-
-    total
-    https://api.open-meteo.com/v1/forecast?latitude=52.52&longitude=13.41&current=temperature_2m,surface_pressure,wind_speed_10m,relative_humidity_2m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min&daily=wind_direction_10m_dominant&hourly=visibility&wind_speed_unit=mph&timezone=auto
-    */
 
     return { weather, weatherCodesList, todayWeatherData, nextDaysWeatherData, fetchDataWeather, fetchDataWeatherFromLocation,  transformAngleWindToCharacters, formatDate }
 })

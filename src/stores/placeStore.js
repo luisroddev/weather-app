@@ -5,9 +5,9 @@ import placesFormatJSON from './../assets/data/places.json'
 export const usePlaceStore = defineStore('placeStore', () => {
     const placesFormatList = ref(placesFormatJSON)
     const place = ref()
-
+    
     //por defecto los datos que se tomarán por primera vez serán los de London
-    place.value = placesFormatList.value[0]
+    place.value = placesFormatJSON[0]
 
     /**
      * Pide a la API Geocoding los datos de un lugar
@@ -42,6 +42,14 @@ export const usePlaceStore = defineStore('placeStore', () => {
         return place.value
     }
 
+     /**
+     * Agrega a la lista de lugares un nuevo lugar
+     * @param {String} place lugar 
+     */
+     function addPlace(place) {
+        placesFormatList.value.push(place)
+    }
+
     /**
      * Cambiar el valor del lugar elegido
      * @param {String} location lugar elegido
@@ -50,5 +58,5 @@ export const usePlaceStore = defineStore('placeStore', () => {
         place.value = location
     }
 
-    return { place, placesFormatList, searchPlace, fetchPlace, updateSelectedPlace }
+    return { place, placesFormatList, searchPlace, fetchPlace, addPlace, updateSelectedPlace }
 })

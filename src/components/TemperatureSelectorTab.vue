@@ -3,10 +3,10 @@
 </script>
 <template>
     <section class="selector">
-        <button class="selector__button selector__button--active">
+        <button class="selector__button selector__button--active" aria-label="Select Celsius measure">
             <span>ºC</span>
         </button>
-        <button class="selector__button">
+        <button class="selector__button" aria-label="Select Fahrenheit measure">
             <span>ºF</span>
         </button>
     </section>

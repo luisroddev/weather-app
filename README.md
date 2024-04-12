@@ -1,14 +1,11 @@
 # weather-app
 
-This template should help get you started developing with Vue 3 in Vite.
+Aplicación para ver el clima de un lugar
 
-## Recommended IDE Setup
+## APIs
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vitejs.dev/config/).
+[OpenMeteo Weather Forecast API](https://open-meteo.com/en/docs) para el clima
+[OpenMeteo Geolocating API](https://open-meteo.com/en/docs/geocoding-api) para las localizaciones
 
 ## Project Setup
 
